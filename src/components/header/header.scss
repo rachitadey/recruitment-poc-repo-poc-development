@@ -1,0 +1,24 @@
+.header .nav {
+  justify-content: space-between;
+  padding: 10px 40px;
+  border-bottom: solid var(--bs-border-color);
+}
+
+@media screen and (min-width: 1600px) {
+  .header .nav {
+    padding: 10px 120px;
+  }
+}
+
+.header .nav .logo-section {
+  display: flex;
+  align-items: center;
+  .lilly-logo{
+    height:80px;
+  }
+}
+
+.header .nav .link-section {
+  display: flex;
+  align-items: center;
+}

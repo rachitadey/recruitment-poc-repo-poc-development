@@ -1,0 +1,16 @@
+$blue: #1967d2;
+
+.sign-in-and-sign-up.row {
+  margin: 0;
+  padding: 80px 0;
+  align-items: center;
+
+  .separator {
+    border-left: 6px solid $blue;
+    height: 400px;
+    width: 6px;
+    position: absolute;
+    padding: 0;
+    left: calc(50% - 3px);
+  }
+}

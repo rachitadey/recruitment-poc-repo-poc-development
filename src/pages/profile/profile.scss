@@ -1,0 +1,98 @@
+.profile {
+  margin: 40px 0;
+  .recruiter-profile {
+    margin: 0 auto;
+    .profile-header {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .profile-form {
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      padding: 16px 20px;
+
+      .submit-btn {
+        background: #1967d2;
+        height: 48px;
+        width: 150px;
+        border-radius: 4px;
+        margin: 10px 0;
+      }
+    }
+  }
+
+  .candidate-container {
+    margin: 0 auto;
+
+    .matched-candidate-container {
+      justify-content: space-evenly;
+    }
+
+    .candidate-container-header {
+      font-size: 20px;
+      margin-bottom: 20px;
+
+      .update-btn {
+        background: #1967d2;
+        height: 48px;
+        width: 200px;
+        border-radius: 4px;
+      }
+    }
+
+    .candidate-info {
+      .shortlist-btn {
+        background: #1967d2;
+        height: 48px;
+        width: 150px;
+        border-radius: 4px;
+        margin: 10px 0;
+      }
+    }
+  }
+
+  .candidate-profile {
+    margin: 0 auto;
+    .profile-header {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .profile-form {
+      .accordion-item {
+        border-radius: 6px;
+        &:last-of-type {
+          margin-top: 20px;
+        }
+
+        .accordion-header {
+          button {
+            border-top-right-radius: 6px;
+            border-top-left-radius: 6px;
+          }
+        }
+      }
+      .submit-btn {
+        background: #1967d2;
+        height: 48px;
+        width: 150px;
+        border-radius: 4px;
+        margin-top: 20px;
+      }
+    }
+  }
+
+  .form-control.is-valid, 
+  .was-validated .form-control:valid,
+  .was-validated .form-select:valid:not([multiple]):not([size]) {
+    --bs-form-select-bg-icon: url('');
+    border-color: var(--bs-border-color);
+    padding: 6px 12px;
+  }
+
+  .form-control.is-valid, 
+  .was-validated .form-control:valid {
+    background-image: none; 
+  }
+}
