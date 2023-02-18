@@ -8,7 +8,6 @@ import "./signup.scss";
 const Signup = () => {
   const [isLoggedIn, setIsLoggedIn] = useContext(GlobalContext).isLoggedIn;
   useEffect(() => {
-    console.log(document.getElementById("status-recruiter"));
     let rec = document.getElementById("status-recruiter");
     let can = document.getElementById("status-candidate");
     let currStatus = localStorage.getItem("status");
@@ -51,7 +50,6 @@ const Signup = () => {
     if (canStatusCheck) {
       signupFormUserStatus = "candidate";
     }
-    console.log(signupFormUserStatus);
     if (uname && uemail && upwd) {
       let signupFormUserData = {
         name: uname,
