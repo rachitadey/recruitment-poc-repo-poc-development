@@ -28,6 +28,8 @@ const RecruiterProfile = () => {
   const [pickerValidated, setPickerValidated] = useState(false);
 
   const [show, setShow] = useState(false);
+  const [shortlistedSuccess, setShortlistedSuccess] = useState(false)
+  const [shortlistedProfile, setShortlistedProfile] = useState(null)
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -157,6 +159,7 @@ const RecruiterProfile = () => {
   const shortlistHandler = (data) => {
     console.log('currentShortlisted', data);
     localStorage.setItem("currentShortlisted", JSON.stringify(data));
+    setShortlistedProfile(data)
     setShow(true);
   };
   const startDateHandler = (evt) => {
@@ -187,12 +190,15 @@ const RecruiterProfile = () => {
       localStorage.setItem('canUserList', JSON.stringify(allCandidate));
       console.log("START DATE", startDate, "END DATE", endDate, "START TIME", startTime, "END TIME", endTime);
       setShow(false);
+      setShortlistedSuccess(true)
     }
     setPickerValidated(true);
   };
 
   const reloadRecruiterForm = () => {
     setShowRecruiterForm(true);
+    setShortlistedSuccess(false);
+    setShortlistedProfile(null);
     setValidated(false);
     setPrimarySkill('');
     setPrimarySkillWeight('50%');
@@ -321,7 +327,7 @@ const RecruiterProfile = () => {
       </div>
 
       <div className="candidate-container col-md-8 col-lg-8">
-        {!showRecruiterForm && !!candidateList.length &&
+        {!showRecruiterForm && !!candidateList.length && !shortlistedSuccess &&
           <div className="matched-candidate-container row">
             <div className="candidate-container-header col-lg-11">
               Check the best matching profiles as per your requiremet.
@@ -411,13 +417,20 @@ const RecruiterProfile = () => {
           </Form>
         </Modal>
 
-        {!showRecruiterForm && !candidateList.length &&
+        {!showRecruiterForm && !candidateList.length && !shortlistedSuccess &&
           <div className="no-matched-candidate">
             There are no matching profile avaiable. Please try after modifying your requirement.
             <Button variant="primary" type="submit" onClick={reloadRecruiterForm}>
               Refine Search
             </Button>
           </div>
+        }
+        {console.log('as',shortlistedProfile)}
+        { shortlistedSuccess && shortlistedProfile &&
+        <div className="no-matched-candidate">
+        {shortlistedProfile.name} has been shortlisted. slottime is {shortlistedProfile.slotTime}.
+        <Button variant="primary update-btn float-end" onClick={reloadRecruiterForm}>Update Requirement</Button>
+      </div>
         }
 
       </div>
