@@ -196,7 +196,7 @@ const CandidateProfile = () => {
               <Form noValidate validated={validated} onSubmit={candidateDetailsSubmitHandler}>
                 <Accordion defaultActiveKey={['personalDetails', 'workDetails']} alwaysOpen>
                   <Accordion.Item eventKey="personalDetails">
-                    <Accordion.Header>Persoal Details</Accordion.Header>
+                    <Accordion.Header>Personal Details</Accordion.Header>
                     <Accordion.Body>
                       <Form.Group className="mb-3" controlId="name">
                         <Form.Label>Name</Form.Label>
@@ -234,7 +234,7 @@ const CandidateProfile = () => {
                         <Form.Label>Adhaar Number</Form.Label>
                         <Form.Control type="text" placeholder="Enter your Adhaar number" required pattern="[0-9]{16}" onChange={aadharHandler} />
                         <Form.Control.Feedback type="invalid">
-                          Please fill up the Adhaar Number in correct format(12 digits).
+                          Please fill up the Adhaar Number in correct format(16 digits).
                         </Form.Control.Feedback>
                       </Form.Group>
 
@@ -245,6 +245,7 @@ const CandidateProfile = () => {
                           Please fill up the PAN in correct format(10 characters).
                         </Form.Control.Feedback>
                       </Form.Group>
+                      <div style={{color: 'red'}}>* Only to ensure duplicate check. Lilly does not Store the Pan and Adhaar number</div>
                     </Accordion.Body>
                   </Accordion.Item>
                   <Accordion.Item eventKey="workDetails">

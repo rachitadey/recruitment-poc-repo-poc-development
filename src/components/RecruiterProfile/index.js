@@ -120,8 +120,12 @@ const RecruiterProfile = () => {
 
   const GetAllIndexes = (cRequirement, rRequirment)  =>
   {
-    const cSkill = cRequirement.split(",");
+    let cSkill = []
+    if (cRequirement){
+     cSkill = cRequirement.split(",");
+    }
     const rSkill = rRequirment.split(",");
+    console.log(cSkill);
     var c = rSkill.filter(value => cSkill.includes(value))
     return c;
   }
@@ -327,6 +331,8 @@ const RecruiterProfile = () => {
               <Card key={i} className="candidate-info col-lg-5">
                 <Card.Body>
                   <Card.Title>{candidate.name}</Card.Title>
+                  <Card.Title>Rank: {i + 1}</Card.Title>
+                  <Card.Title>Score: {candidate.matchCalculation * 100}</Card.Title>
                   <Card.Text>
                     Primary Skill: {candidate.userdetails.primarySkill}
                   </Card.Text>
