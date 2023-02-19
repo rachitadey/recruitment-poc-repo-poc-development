@@ -28,6 +28,7 @@ const CandidateProfile = () => {
   const allCandidate = JSON.parse(localStorage.getItem('canUserList'));
 
   useEffect(() => {
+    console.log('allcan', currentCandidate);
     setShowCandidateForm(!currentCandidate.userhasdetails);
     setRecruiterList(JSON.parse(localStorage.getItem('recUserList')));
   }, []);
@@ -308,10 +309,20 @@ const CandidateProfile = () => {
       </div>
 
       <div className="candidate-profile-submitted-container col-md-8 col-lg-8">
-        {!showCandidateForm &&
+        {!showCandidateForm && !currentCandidate.slotTime && currentCandidate.slotTime === '' &&
           <div className="confirmation-header">
             Your application has been submitted. You'll be notified if a recruiter wants to connect with you.
           </div>
+        }
+      </div>
+      <div className="candidate-profile-submitted-container col-md-8 col-lg-8">
+        {!showCandidateForm && currentCandidate.slotTime && currentCandidate.slotTime !== '' &&
+          <><div className="confirmation-header">
+            Recruiter has selected the slot. {currentCandidate.slotTime}
+          </div><div className="confirmation-header">
+              Please, select your avaiable slot.
+              <Button variant="primary shortlist-btn float-end" onClick={() => shortlistHandler(candidate)}>Choose Your Slot</Button>
+            </div></>
         }
       </div>
     </>

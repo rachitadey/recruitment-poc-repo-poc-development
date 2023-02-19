@@ -151,6 +151,7 @@ const RecruiterProfile = () => {
   }
 
   const shortlistHandler = (data) => {
+    console.log('currentShortlisted', data);
     localStorage.setItem("currentShortlisted", JSON.stringify(data));
     setShow(true);
   };
@@ -172,6 +173,14 @@ const RecruiterProfile = () => {
     evt.preventDefault();
     evt.stopPropagation();
     if (isFormValid) {
+      const currentShortlistedCan = JSON.parse(localStorage.getItem('currentShortlisted'))
+      allCandidate.map(r => {
+        if (r.name === currentShortlistedCan.name) {
+          r.slotTime = "START DATE" + startDate + "END DATE"+ endDate + "START TIME" + startTime + "END TIME" + endTime;
+        }
+        return r;
+      });
+      localStorage.setItem('canUserList', JSON.stringify(allCandidate));
       console.log("START DATE", startDate, "END DATE", endDate, "START TIME", startTime, "END TIME", endTime);
       setShow(false);
     }
