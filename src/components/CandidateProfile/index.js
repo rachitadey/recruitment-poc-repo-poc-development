@@ -320,7 +320,7 @@ const CandidateProfile = () => {
           <><div className="confirmation-header">
             Recruiter has selected the slot. {currentCandidate.slotTime}
           </div><div className="confirmation-header">
-              Please, select your avaiable slot.
+              Please, Choose your avaiable slot.
               <Button variant="primary shortlist-btn float-end" onClick={() => shortlistHandler(candidate)}>Choose Your Slot</Button>
             </div></>
         }
