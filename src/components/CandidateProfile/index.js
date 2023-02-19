@@ -309,7 +309,7 @@ const CandidateProfile = () => {
       </div>
 
       <div className="candidate-profile-submitted-container col-md-8 col-lg-8">
-        {!showCandidateForm && !currentCandidate.slotTime && currentCandidate.slotTime === '' &&
+        {!showCandidateForm && !currentCandidate.slotTime &&
           <div className="confirmation-header">
             Your application has been submitted. You'll be notified if a recruiter wants to connect with you.
           </div>
