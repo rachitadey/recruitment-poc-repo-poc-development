@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 
 const CandidateProfile = () => {
   const [name, setName] = useState('');
@@ -26,6 +27,15 @@ const CandidateProfile = () => {
   const [recruiterList, setRecruiterList] = useState();
   const currentCandidate = JSON.parse(localStorage.getItem('currentUser'));
   const allCandidate = JSON.parse(localStorage.getItem('canUserList'));
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [pickerValidated, setPickerValidated] = useState(false);
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
 
   useEffect(() => {
     console.log('allcan', currentCandidate);
@@ -145,6 +155,33 @@ const CandidateProfile = () => {
     }
 
     setValidated(true);
+  };
+
+  const shortlistHandler = () => {
+    setShow(true);
+  };
+  const startDateHandler = (evt) => {
+    setStartDate(evt.target.value);
+  };
+  const endDateHandler = (evt) => {
+    setEndDate(evt.target.value);
+  };
+  const startTimeHandler = (evt) => {
+    setStartTime(evt.target.value);
+  };
+  const endTimeHandler = (evt) => {
+    setEndTime(evt.target.value);
+  };
+  const pickerModalSubmitHandler = (evt) => {
+    const recruiterForm = evt.currentTarget;
+    const isFormValid = recruiterForm.checkValidity();
+    evt.preventDefault();
+    evt.stopPropagation();
+    if (isFormValid) {
+      console.log("START DATE", startDate, "END DATE", endDate, "START TIME", startTime, "END TIME", endTime);
+      setShow(false);
+    }
+    setPickerValidated(true);
   };
 
   return (
@@ -314,17 +351,61 @@ const CandidateProfile = () => {
             Your application has been submitted. You'll be notified if a recruiter wants to connect with you.
           </div>
         }
-      </div>
-      <div className="candidate-profile-submitted-container col-md-8 col-lg-8">
         {!showCandidateForm && currentCandidate.slotTime && currentCandidate.slotTime !== '' &&
           <><div className="confirmation-header">
             Recruiter has selected the slot. {currentCandidate.slotTime}
           </div><div className="confirmation-header">
               Please, Choose your avaiable slot.
-              <Button variant="primary shortlist-btn float-end" onClick={() => shortlistHandler(candidate)}>Choose Your Slot</Button>
+              <Button variant="primary shortlist-btn float-end" onClick={() => shortlistHandler()}>Choose Your Slot</Button>
             </div></>
         }
+        <Modal
+          show={show}
+          onHide={handleClose}
+          backdrop="static"
+          keyboard={false}
+          size="lg"
+          centered
+        >
+          <Form noValidate validated={pickerValidated} onSubmit={pickerModalSubmitHandler}>
+            <Modal.Header closeButton>
+              <Modal.Title>Select Time and Date to create slots</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="picker-container">
+                <div className="date-picker">
+                  <Form.Group className="picker-form-group">
+                    <Form.Label htmlFor='start-date'>START DATE</Form.Label>
+                    <Form.Control type="date" className="start-date" required onChange={startDateHandler} />
+                  </Form.Group>
+                  <Form.Group className="picker-form-group">
+                    <Form.Label htmlFor='start-date'>END DATE</Form.Label>
+                    <Form.Control type="date" className="end-date" required onChange={endDateHandler} />
+                  </Form.Group>
+                </div>
+                <div className="time-picker">
+                  <Form.Group className="picker-form-group">
+                    <Form.Label htmlFor='start-time'>START TIME</Form.Label>
+                    <Form.Control type="time" required onChange={startTimeHandler} className="start-time" />
+                  </Form.Group>
+                  <Form.Group className="picker-form-group">
+                    <Form.Label htmlFor='end-time'>END TIME</Form.Label>
+                    <Form.Control type="time" required onChange={endTimeHandler} className="end-time" />
+                  </Form.Group>
+                </div>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Close
+              </Button>
+              <Button variant="primary" type="submit" >Send</Button>
+            </Modal.Footer>
+          </Form>
+        </Modal>
       </div>
+
+     
     </>
   );
 };
