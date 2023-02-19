@@ -7,8 +7,8 @@ import Card from 'react-bootstrap/Card';
 const RecruiterProfile = () => {
   const [primarySkill, setPrimarySkill] = useState('');
   const [primarySkillWeight, setPrimarySkillWeight] = useState('50%');
-  const [secondaySkill, setSecondarySkill] = useState('');
-  const [secondaySkillWeight, setSecondarySkillWeight] = useState('30%');
+  const [secondarySkill, setSecondarySkill] = useState('');
+  const [secondarySkillWeight, setSecondarySkillWeight] = useState('30%');
   const [tertiarySkill, setTertiarySkill] = useState('');
   const [tertiarySkillWeight, setTertiarySkillWeight] = useState('20%');
   const [relatedWords, setRelatedWords] = useState('');
@@ -18,6 +18,7 @@ const RecruiterProfile = () => {
   const [validated, setValidated] = useState(false);
   const [showRecruiterForm, setShowRecruiterForm] = useState(false);
   const [candidateList, setCandidateList] = useState([]);
+  const allCandidate = JSON.parse(localStorage.getItem('canUserList'));
   const currentRecruiter = JSON.parse(localStorage.getItem('currentUser'));
   const allRecruiter = JSON.parse(localStorage.getItem('recUserList'));
   const [startTime, setStartTime] = useState('');
@@ -33,7 +34,7 @@ const RecruiterProfile = () => {
 
   useEffect(() => {
     setShowRecruiterForm(!currentRecruiter.userhasdetails);
-    setCandidateList(JSON.parse(localStorage.getItem('canUserList')));
+    // setCandidateList(JSON.parse(localStorage.getItem('canUserList')));
   }, []);
 
   const primarySkillHandler = (e) => {
@@ -88,8 +89,8 @@ const RecruiterProfile = () => {
 
       recruiter.primarySkill = primarySkill;
       recruiter.primarySkillWeight = primarySkillWeight;
-      recruiter.secondaySkill = secondaySkill;
-      recruiter.secondaySkillWeight = secondaySkillWeight;
+      recruiter.secondarySkill = secondarySkill;
+      recruiter.secondarySkillWeight = secondarySkillWeight;
       recruiter.tertiarySkill = tertiarySkill;
       recruiter.tertiarySkillWeight = tertiarySkillWeight;
       recruiter.relatedWords = relatedWords;
@@ -99,7 +100,7 @@ const RecruiterProfile = () => {
 
       currentRecruiter.userdetails = recruiter;
       currentRecruiter.userhasdetails = true;
-      setShowRecruiterForm(false);
+      
 
       allRecruiter.map(r => {
         if (r.name === currentRecruiter.name) {
@@ -108,11 +109,46 @@ const RecruiterProfile = () => {
         }
         return r;
       });
+      sortingCandidateList();
       localStorage.setItem('recUserList', JSON.stringify(allRecruiter));
       localStorage.setItem('currentUser', JSON.stringify(currentRecruiter));
+
+      setShowRecruiterForm(false);
     }
     setValidated(true);
   };
+
+  const GetAllIndexes = (cRequirement, rRequirment)  =>
+  {
+    const cSkill = cRequirement.split(",");
+    const rSkill = rRequirment.split(",");
+    var c = rSkill.filter(value => cSkill.includes(value))
+    return c;
+  }
+  const CheckForRequirement = (candidate) =>{
+    const findPrimary = GetAllIndexes(candidate.userdetails.primarySkill, primarySkill).length;
+    const findSecondary = GetAllIndexes(candidate.userdetails.secondarySkill, secondarySkill).length;
+    const findTertiary  = GetAllIndexes(candidate.userdetails.tertiarySkill, tertiarySkill).length;
+    const calculate = ((parseInt(primarySkillWeight) / 100) * findPrimary) + ((parseInt(secondarySkillWeight) / 100) * findSecondary) + ((parseInt(tertiarySkillWeight) / 100) * findTertiary);
+    return calculate;
+
+
+  }
+  const sortingCandidateList = () =>{
+    const tempSortedCandidateList = [];
+    console.log('allCandidate',allCandidate);
+    allCandidate.forEach(element => { 
+      const totalweight = CheckForRequirement(element);
+      console.log('total', totalweight);
+      if (totalweight > 0){
+        element.matchCalculation = totalweight;
+        tempSortedCandidateList.push(element);
+      }
+    });
+    console.log('aa', tempSortedCandidateList);
+    const srt = tempSortedCandidateList.sort((a,b)=>b.matchCalculation-a.matchCalculation)
+    setCandidateList(srt)
+  }
 
   const shortlistHandler = (data) => {
     localStorage.setItem("currentShortlisted", JSON.stringify(data));
