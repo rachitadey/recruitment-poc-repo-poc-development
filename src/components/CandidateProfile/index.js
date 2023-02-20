@@ -3,6 +3,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import Card from 'react-bootstrap/Card';
 
 const CandidateProfile = () => {
   const [name, setName] = useState('');
@@ -32,13 +33,14 @@ const CandidateProfile = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [pickerValidated, setPickerValidated] = useState(false);
+  const [candidateSlotSelected, setCandidateSlotSelected] = useState(false);
+  const [candidateSelectedTime, setCandidateSelectedTime] = useState();
 
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
 
   useEffect(() => {
-    console.log('allcan', currentCandidate);
     setShowCandidateForm(!currentCandidate.userhasdetails);
     setRecruiterList(JSON.parse(localStorage.getItem('recUserList')));
   }, []);
@@ -143,12 +145,12 @@ const CandidateProfile = () => {
       currentCandidate.userhasdetails = true;
       setShowCandidateForm(false);
 
-      allCandidate.map(r => {
-        if (r.name === currentCandidate.name) {
-          r.userdetails = currentCandidate.userdetails;
-          r.userhasdetails = currentCandidate.userhasdetails;
+      allCandidate.map(c => {
+        if (c.name === currentCandidate.name) {
+          c.userdetails = currentCandidate.userdetails;
+          c.userhasdetails = currentCandidate.userhasdetails;
         }
-        return r;
+        return c;
       });
       localStorage.setItem('canUserList', JSON.stringify(allCandidate));
       localStorage.setItem('currentUser', JSON.stringify(currentCandidate));
@@ -178,16 +180,28 @@ const CandidateProfile = () => {
     evt.preventDefault();
     evt.stopPropagation();
     if (isFormValid) {
-      currentCandidate.slotTimeOfCandidate = "START DATE - " + startDate + ", END DATE - "+ endDate + ", START TIME - " + startTime + ", END TIME - " + endTime;
-      localStorage.setItem('currentUser', JSON.stringify(currentCandidate));
-      allCandidate.map(r => {
-        if (r.name === currentCandidate.name) {
-          r.slotTimeOfCandidate = "START DATE - " + startDate + ", END DATE - "+ endDate + ", START TIME - " + startTime + ", END TIME - " + endTime;
+      setCandidateSelectedTime({startDate: startDate,
+        startTime: startTime,
+        endDate: endDate,
+        endTime: endTime
+      });
+      currentCandidate.candidateStartDate = startDate;
+      currentCandidate.candidateStartTime = startTime;
+      currentCandidate.candidateEndDate = endDate;
+      currentCandidate.candidateSelectedTime = endTime;
+      
+
+      allCandidate.map(c => {
+        if (c.name === currentCandidate.name) {
+          c.candidateStartDate = currentCandidate.candidateStartDate;
+          c.candidateStartTime = currentCandidate.candidateStartTime;
+          c.candidateEndDate = currentCandidate.candidateEndDate;
+          c.candidateSelectedTime = currentCandidate.candidateSelectedTime;
         }
-        return r;
+        return c;
       });
       localStorage.setItem('canUserList', JSON.stringify(allCandidate));
-      console.log("START DATE", startDate, "END DATE", endDate, "START TIME", startTime, "END TIME", endTime);
+      setCandidateSlotSelected(true);
       setShow(false);
     }
     setPickerValidated(true);
@@ -254,7 +268,7 @@ const CandidateProfile = () => {
                           Please fill up the PAN in correct format(10 characters).
                         </Form.Control.Feedback>
                       </Form.Group>
-                      <div style={{color: 'red'}}>* Only to ensure duplicate check. Lilly does not Store the Pan and Adhaar number</div>
+                      <div className="alert-msg" style={{color: 'red'}}>* ELI LILLY requires your Aadhar, PAN or other PII data to check if your profile already exists with us & prevent Duplicates. We do NOT store your data. All confidential data is purged as soon as our checks are complete. No data is stored with us barring your skills that are required for the job post.</div>
                     </Accordion.Body>
                   </Accordion.Item>
                   <Accordion.Item eventKey="workDetails">
@@ -356,25 +370,64 @@ const CandidateProfile = () => {
       </div>
 
       <div className="candidate-profile-submitted-container col-md-8 col-lg-8">
-        {!showCandidateForm && !currentCandidate.slotTime &&
+        {!showCandidateForm && !currentCandidate.startDate &&
           <div className="confirmation-header">
             Your application has been submitted. You'll be notified if a recruiter wants to connect with you.
           </div>
         }
-        {!showCandidateForm && currentCandidate.slotTime && currentCandidate.slotTime !== '' &&
-          <><div className="confirmation-header">
-            Recruiter has selected the slot. {currentCandidate.slotTime}
+        {!showCandidateForm && currentCandidate.startDate && currentCandidate.startTime && currentCandidate.endDate && currentCandidate.endTime &&
+          <><div className="confirmation-container mb-3">
+            <div className="confirmation-header">Recruiter has selected the slot.</div>
+            <Card style={{ width: '500px' }}>
+            <Card.Body>
+              <Card.Title>Scheduled Slot Time</Card.Title>
+              <Card.Text>
+                <div className="row">
+                  <div className="col-6">Start Date: {currentCandidate.startDate}</div>
+                  <div className="col-6">End Date: {currentCandidate.endDate}</div>
+                </div>
+              </Card.Text>
+              <Card.Text>
+                <div className="row">
+                  <div className="col-6">Start Time: {currentCandidate.startTime}</div>
+                  <div className="col-6">End Time: {currentCandidate.endTime}</div>
+                </div>
+              </Card.Text>
+            </Card.Body>
+          </Card>
           </div>
-          {currentCandidate.slotTimeOfCandidate && currentCandidate.slotTimeOfCandidate !== '' &&
-          <div className="confirmation-header">
-          Your selected the slot is - . {currentCandidate.slotTimeOfCandidate}
-        </div>
+          { !candidateSlotSelected && 
+            <div className="confirmation-header mt-3">
+              Please, choose your avaiable slot.
+              <Button variant="primary candidate-choose-slot-btn float-end" onClick={() => shortlistHandler()}>Choose Your Slot</Button>
+            </div>
           }
-          <div className="confirmation-header">
-              Please, Choose your avaiable slot.
-              <Button variant="primary shortlist-btn float-end" onClick={() => shortlistHandler()}>Choose Your Slot</Button>
-            </div></>
+          {
+            candidateSlotSelected && 
+            <div className="candidate-selected-slot">
+              <div className="confirmation-header">You have selected the slot.</div>
+              <Card style={{ width: '500px' }}>
+              <Card.Body>
+                <Card.Title>Scheduled Slot Time</Card.Title>
+                <Card.Text>
+                  <div className="row">
+                    <div className="col-6">Start Date: {candidateSelectedTime.startDate}</div>
+                    <div className="col-6">End Date: {candidateSelectedTime.endDate}</div>
+                  </div>
+                </Card.Text>
+                <Card.Text>
+                  <div className="row">
+                    <div className="col-6">Start Time: {candidateSelectedTime.startTime}</div>
+                    <div className="col-6">End Time: {candidateSelectedTime.endTime}</div>
+                  </div>
+                </Card.Text>
+              </Card.Body>
+            </Card>
+            </div>
+          }
+          </>
         }
+
         <Modal
           show={show}
           onHide={handleClose}

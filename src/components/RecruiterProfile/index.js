@@ -28,15 +28,20 @@ const RecruiterProfile = () => {
   const [pickerValidated, setPickerValidated] = useState(false);
 
   const [show, setShow] = useState(false);
-  const [shortlistedSuccess, setShortlistedSuccess] = useState(false)
-  const [shortlistedProfile, setShortlistedProfile] = useState(null)
+  const [shortlistedSuccess, setShortlistedSuccess] = useState(true);
+  const [shortlistedProfile, setShortlistedProfile] = useState(null);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   useEffect(() => {
     setShowRecruiterForm(!currentRecruiter.userhasdetails);
-    // setCandidateList(JSON.parse(localStorage.getItem('canUserList')));
+    const data = localStorage.getItem("currentShortlisted");
+    if(data && data.length) {
+      setShortlistedProfile(JSON.parse(data));
+    } else {
+      setShortlistedSuccess(false);
+    }
   }, []);
 
   const primarySkillHandler = (e) => {
@@ -127,8 +132,7 @@ const RecruiterProfile = () => {
      cSkill = cRequirement.split(",");
     }
     const rSkill = rRequirment.split(",");
-    console.log(cSkill);
-    var c = rSkill.filter(value => cSkill.includes(value))
+    let c = rSkill.filter(value => cSkill.includes(value))
     return c;
   }
   const CheckForRequirement = (candidate) =>{
@@ -142,16 +146,13 @@ const RecruiterProfile = () => {
   }
   const sortingCandidateList = () =>{
     const tempSortedCandidateList = [];
-    console.log('allCandidate',allCandidate);
     allCandidate.forEach(element => { 
       const totalweight = CheckForRequirement(element);
-      console.log('total', totalweight);
       if (totalweight > 0){
         element.matchCalculation = totalweight;
         tempSortedCandidateList.push(element);
       }
     });
-    console.log('aa', tempSortedCandidateList);
     const srt = tempSortedCandidateList.sort((a,b)=>b.matchCalculation-a.matchCalculation)
     setCandidateList(srt)
   }
@@ -159,7 +160,6 @@ const RecruiterProfile = () => {
   const shortlistHandler = (data) => {
     console.log('currentShortlisted', data);
     localStorage.setItem("currentShortlisted", JSON.stringify(data));
-    setShortlistedProfile(data)
     setShow(true);
   };
   const startDateHandler = (evt) => {
@@ -181,14 +181,22 @@ const RecruiterProfile = () => {
     evt.stopPropagation();
     if (isFormValid) {
       const currentShortlistedCan = JSON.parse(localStorage.getItem('currentShortlisted'))
+      currentShortlistedCan.startDate = startDate;
+      currentShortlistedCan.endDate = endDate;
+      currentShortlistedCan.startTime = startTime;
+      currentShortlistedCan.endTime = endTime;
+      localStorage.setItem("currentShortlisted", JSON.stringify(currentShortlistedCan));
+    setShortlistedProfile(currentShortlistedCan)
       allCandidate.map(r => {
         if (r.name === currentShortlistedCan.name) {
-          r.slotTime = "START DATE - " + startDate + ", END DATE - "+ endDate + ", START TIME - " + startTime + ", END TIME - " + endTime;
+          r.startDate = startDate;
+          r.endDate = endDate;
+          r.startTime = startTime;
+          r.endTime = endTime;
         }
         return r;
       });
       localStorage.setItem('canUserList', JSON.stringify(allCandidate));
-      console.log("START DATE", startDate, "END DATE", endDate, "START TIME", startTime, "END TIME", endTime);
       setShow(false);
       setShortlistedSuccess(true)
     }
@@ -211,6 +219,11 @@ const RecruiterProfile = () => {
     setEmploymentType('full');
     setCtc('1lakh-3lakh');
   };
+ 
+  const downloadCandidateExcel = () => {
+    // saveAs(excelConvert(allCandidate), `AllCandidateList.xlsx`);
+    console.log('download excel sheet for all candidates //TODO');
+  }
 
   return (
     <>
@@ -330,8 +343,11 @@ const RecruiterProfile = () => {
         {!showRecruiterForm && !!candidateList.length && !shortlistedSuccess &&
           <div className="matched-candidate-container row">
             <div className="candidate-container-header col-lg-11">
-              Check the best matching profiles as per your requiremet.
-              <Button variant="primary update-btn float-end" onClick={reloadRecruiterForm}>Update Requirement</Button>
+              <div>Check the best matching profiles as per your requirement.</div>
+              <div className="btn-container">
+                <Button variant="primary all-candidate-btn" onClick={downloadCandidateExcel}>All Candidate List</Button>
+                <Button variant="primary update-btn" onClick={reloadRecruiterForm}>Update Requirement</Button>
+              </div>
             </div>
             {candidateList.map((candidate, i) =>
               <Card key={i} className="candidate-info col-lg-5">
@@ -425,10 +441,50 @@ const RecruiterProfile = () => {
             </Button>
           </div>
         }
-        {console.log('as',shortlistedProfile)}
+
         { shortlistedSuccess && shortlistedProfile &&
         <div className="no-matched-candidate">
-        {shortlistedProfile.name} has been shortlisted. slottime is {shortlistedProfile.slotTime}.
+        <div className="no-matched-header">{shortlistedProfile.name} has been shortlisted.</div>
+        <Card style={{ width: '500px' }}>
+          <Card.Body>
+            <Card.Title>Scheduled Slot Time</Card.Title>
+            <Card.Text>
+              <div className="row">
+                <div className="col-6">Start Date: {shortlistedProfile.startDate}</div>
+                <div className="col-6">End Date: {shortlistedProfile.endDate}</div>
+              </div>
+            </Card.Text>
+            <Card.Text>
+              <div className="row">
+                <div className="col-6">Start Time: {shortlistedProfile.startTime}</div>
+                <div className="col-6">End Time: {shortlistedProfile.endTime}</div>
+              </div>
+            </Card.Text>
+          </Card.Body>
+        </Card>
+
+        { !!shortlistedProfile.candidatedStartDate &&
+          <>
+            <div className="candidate-slot-header mb-3">{shortlistedProfile.name} has selected the slot.</div>
+            <Card style={{ width: '500px' }}>
+              <Card.Body>
+                <Card.Title>Scheduled Slot Time</Card.Title>
+                <Card.Text>
+                  <div className="row">
+                    <div className="col-6">Start Date: {shortlistedProfile.candidateStartDate}</div>
+                    <div className="col-6">End Date: {shortlistedProfile.candidateEndDate}</div>
+                  </div>
+                </Card.Text>
+                <Card.Text>
+                  <div className="row">
+                    <div className="col-6">Start Time: {shortlistedProfile.candidateStartTime}</div>
+                    <div className="col-6">End Time: {shortlistedProfile.candidateEndTime}</div>
+                  </div>
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </>
+        }
         <Button variant="primary update-btn float-end" onClick={reloadRecruiterForm}>Update Requirement</Button>
       </div>
         }
