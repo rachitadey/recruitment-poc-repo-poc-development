@@ -183,7 +183,7 @@ const RecruiterProfile = () => {
       const currentShortlistedCan = JSON.parse(localStorage.getItem('currentShortlisted'))
       allCandidate.map(r => {
         if (r.name === currentShortlistedCan.name) {
-          r.slotTime = "START DATE" + startDate + "END DATE"+ endDate + "START TIME" + startTime + "END TIME" + endTime;
+          r.slotTime = "START DATE - " + startDate + ", END DATE - "+ endDate + ", START TIME - " + startTime + ", END TIME - " + endTime;
         }
         return r;
       });

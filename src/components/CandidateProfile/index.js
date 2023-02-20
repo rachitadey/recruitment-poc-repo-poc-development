@@ -178,6 +178,15 @@ const CandidateProfile = () => {
     evt.preventDefault();
     evt.stopPropagation();
     if (isFormValid) {
+      currentCandidate.slotTimeOfCandidate = "START DATE - " + startDate + ", END DATE - "+ endDate + ", START TIME - " + startTime + ", END TIME - " + endTime;
+      localStorage.setItem('currentUser', JSON.stringify(currentCandidate));
+      allCandidate.map(r => {
+        if (r.name === currentCandidate.name) {
+          r.slotTimeOfCandidate = "START DATE - " + startDate + ", END DATE - "+ endDate + ", START TIME - " + startTime + ", END TIME - " + endTime;
+        }
+        return r;
+      });
+      localStorage.setItem('canUserList', JSON.stringify(allCandidate));
       console.log("START DATE", startDate, "END DATE", endDate, "START TIME", startTime, "END TIME", endTime);
       setShow(false);
     }
@@ -355,7 +364,13 @@ const CandidateProfile = () => {
         {!showCandidateForm && currentCandidate.slotTime && currentCandidate.slotTime !== '' &&
           <><div className="confirmation-header">
             Recruiter has selected the slot. {currentCandidate.slotTime}
-          </div><div className="confirmation-header">
+          </div>
+          {currentCandidate.slotTimeOfCandidate && currentCandidate.slotTimeOfCandidate !== '' &&
+          <div className="confirmation-header">
+          Your selected the slot is - . {currentCandidate.slotTimeOfCandidate}
+        </div>
+          }
+          <div className="confirmation-header">
               Please, Choose your avaiable slot.
               <Button variant="primary shortlist-btn float-end" onClick={() => shortlistHandler()}>Choose Your Slot</Button>
             </div></>
