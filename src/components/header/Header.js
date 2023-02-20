@@ -26,8 +26,8 @@ const Header = () => {
         </div>
         <div className="justify-content-end link-section">
           <li className="nav-item">
-            {currPath === "/" && <Link className="nav-link" to="/signin" onClick={signinFromNavHandler}>Signin</Link>}
-            {currPath === "/profile" && <Link className="nav-link" to="/" onClick={signoutFromNavHandler}>Signout</Link>}
+            {currPath === "/" && <Link className="nav-link" to="/signin" onClick={signinFromNavHandler}>Sign In</Link>}
+            {currPath === "/profile" && <Link className="nav-link" to="/" onClick={signoutFromNavHandler}>Sign Out</Link>}
           </li>
         </div>
       </ul>
