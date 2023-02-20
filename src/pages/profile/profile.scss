@@ -37,12 +37,15 @@
     .candidate-container-header {
       font-size: 20px;
       margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
 
-      .update-btn {
-        background: #1967d2;
-        height: 48px;
-        width: 200px;
-        border-radius: 4px;
+      .all-candidate-btn {
+        margin-right: 30px;
+      }
+    
+      .candidate-slot-header {
+        font-size: 20px;
       }
     }
 
@@ -53,6 +56,13 @@
         width: 150px;
         border-radius: 4px;
         margin: 10px 0;
+      }
+    }
+
+    .no-matched-candidate {
+      .no-matched-header {
+        font-size: 24px;
+        margin-bottom: 20px;
       }
     }
   }
@@ -86,6 +96,26 @@
         margin-top: 20px;
       }
     }
+  }
+
+  .alert-msg {
+    font-size: 12px;
+  }
+
+  .update-btn,
+  .all-candidate-btn {
+    background: #1967d2;
+    height: 48px;
+    width: 200px;
+    border-radius: 4px;
+  }
+
+  .candidate-choose-slot-btn {
+    background: #1967d2;
+    height: 48px;
+    width: 200px;
+    border-radius: 4px;
+    margin: 10px 0;
   }
 
   .candidate-profile-submitted-container {

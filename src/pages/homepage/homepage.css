@@ -79,9 +79,9 @@
 
 @media screen and (min-width: 1600px) {
   .img-bg-circle-area {
-    width: 700px;
-    height: 700px;
-    transform: translate(-40%,-35%);
+    width: 600px;
+    height: 600px;
+    transform: translate(-40%,-40%);
   }
 }
 
@@ -151,4 +151,14 @@
 .img-bg-circle3 {
   background-color: #ecf1f7;
   z-index: 1;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 20px 120px;
+  z-index: 1;
+  margin-top: 20px;
+  border-top: 1px solid var(--bs-border-color);
 }
